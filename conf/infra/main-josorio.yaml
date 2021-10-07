@@ -6,7 +6,7 @@ Resources:
   APIGateway:
     Type: "AWS::Serverless::Api"
     Properties:
-      Name: "Lambdademo​-josorio-APIGateway"
+      Name: "Lambdademo-josorio-APIGateway"
       StageName: "dev"
       DefinitionBody:
         Fn::Transform:

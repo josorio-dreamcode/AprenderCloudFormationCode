@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: |
-    lambdademo-kcabrera API
+    lambdademo-josorio API
   version: 1.0.1-aws
   title: lambdademo API
   license:

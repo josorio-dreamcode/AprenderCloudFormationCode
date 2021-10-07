@@ -1,7 +1,7 @@
 {
   "name": "lambdademo",
   "version": "1.0.0",
-  "description": "lambda demo kcabrera apirest",
+  "description": "lambda demo josorio apirest",
   "main": "index.js",
   "scripts": {
     "createS3Bucket": "aws s3api create-bucket --bucket $AWS_BUCKET_NAME --region $AWS_REGION",
@@ -10,9 +10,9 @@
     "clean": "rimraf dist",
     "build": "npm run clean && tsc",
     "pack": "npm run uploadAPISpec && npm run-script build && cd conf/infra && sam package --s3-bucket $AWS_BUCKET_NAME --s3-prefix package --template-file main.yaml --output-template-file main-pack.yaml",
-    "deploy": "sam deploy --template-file conf/infra/main-pack.yaml --stack-name lambdademo-kcabrera-stack --region $AWS_REGION --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM"
+    "deploy": "sam deploy --template-file conf/infra/main-josorio.yaml --stack-name lambdademo-josorio-stack --region $AWS_REGION --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND CAPABILITY_NAMED_IAM"
   },
-  "author": "kcabrera",
+  "author": "josorio",
   "license": "ISC",
   "devDependencies": {
     "@types/aws-lambda": "8.10.83",

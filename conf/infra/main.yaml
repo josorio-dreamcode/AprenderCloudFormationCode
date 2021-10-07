@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Description: 'Lambda demo app'
+
+Resources:
+  APIGateway:
+    Type: "AWS::Serverless::Api"
+    Properties:
+      Name: "Lambdademo​-josorio-APIGateway"
+      StageName: "dev"
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Join:
+                - ""
+                - - "s3://"
+                  - "jcala-s3bucket/api-spec/api-spec-josorio.yaml"
+      Variables:
+        ApiGateway: !Ref APIGateway
+        region: !Ref AWS::Region
+
+  ###########################
+  # Lambda Role section
+  ###########################
+  LambdaIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "lambdademo-josorio-IAMLambdaRole"
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: "lambdademo-josorio-IAMLambdaRole-IAMPolicy"
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:*
+                  - sns:*
+                  - s3:*
+                  - lambda:*
+                  - states:StartExecution
+                  - states:ListExecutions
+                  - ssm:*
+                  - sqs:*
+                  - ses:*
+                Resource: "*"
+
+  ###########################
+  # Lambda users
+  ###########################
+  lambdademoJOsorioFunctionGetUsers:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: My lambda function get users
+      FunctionName: "lambdademo-josorio-getUsers"
+      CodeUri: ../../dist
+      Handler: ./lambda_handler.getUsers
+      Role: !GetAtt LambdaIAMRole.Arn
+      Runtime: nodejs14.x
+      Timeout: 60
+      Events:
+        PostHttp:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: GET
+            RestApiId: !Ref APIGateway
+
+Outputs:
+  ModuleId:
+    Value: 'Lambdademo'
+  ModuleVersion:
+    Value: '1.0'
+  StackName:
+    Value: !Ref 'AWS::StackName'  

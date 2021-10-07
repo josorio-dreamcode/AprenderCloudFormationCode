@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  description: |
+    lambdademo-kcabrera API
+  version: 1.0.1-aws
+  title: lambdademo API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+paths:  
+  /users:
+    get:
+      tags:
+        - Process provider request.
+      summary: Get users
+      operationId: getDocumentRequest
+      responses:
+        '200':
+          description: Succesful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponse'
+        '405':
+          description: Error in response
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdademoJOsorioFunctionGetUsers.Arn}/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+ 
+components:
+  schemas:    
+    UsersResponse:
+      type: array
+      description: Request sended by our provider.
+      items: 
+        allOf: 
+          - $ref: '#/components/schemas/User'
+  
+    User:
+      type: object
+      description: Request sended by our provider.
+      properties:
+        id: 
+          type: string
+          example: 1
+        name: 
+          type: string
+          example: diana
+        lastname: 
+          type: string
+          example: salas
+        age: 
+          type: integer
+          example: 24
+  
